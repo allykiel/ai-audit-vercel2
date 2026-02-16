@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,12 +220,13 @@
   <div style="text-align:center; margin-bottom:48px;">
     <div class="tag">Free AI Visibility Audit</div>
     <h1>Is AI Search Finding<br><span>Your Brand?</span></h1>
-    <p class="subtitle">When consumers ask ChatGPT, Claude, or Perplexity for the best in your category, are you in the answer — or invisible? Find out in 60 seconds.</p>
+    <p class="subtitle">When consumers ask ChatGPT, Claude, or Perplexity for the best in your category, are you in the answer — or invisible?</p>
     <div class="social-proof">
-      <div class="proof-item">🔍 <span>4</span> AI dimensions analyzed</div>
+      <div class="proof-item">🔍 <span>4</span> key AI dimensions scored</div>
       <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
       <div class="proof-item">⚡ Results in <span>~2 minutes</span></div>
     </div>
+    <p style="font-size:12px;color:#666;margin-top:14px">Built for premium Food &amp; Beverage brands</p>
   </div>
 
   <div class="card" id="inputSection">
@@ -241,9 +243,14 @@
       <label class="section-label">Your Name</label>
       <input type="text" id="userName" placeholder="First name">
     </div>
+    <div class="field">
+      <label class="section-label">Website URL <span style="font-weight:400;color:#666;text-transform:none;letter-spacing:0">(optional — improves accuracy)</span></label>
+      <input type="text" id="brandUrl" placeholder="e.g. yourbrand.com">
+    </div>
     <div id="errorMsg" class="error hidden"></div>
     <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
-    <p style="font-size:11px; color:#444; text-align:center; margin-top:12px;">Powered by live AI search analysis · Takes about 2 minutes</p>
+    <p style="font-size:11px; color:#666; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
+    <p style="font-size:10px; color:#555; text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
   </div>
 
   <div id="progress" class="hidden"></div>
@@ -275,6 +282,7 @@ let results = {};
 let auditBrand = '';
 let auditCat = '';
 let auditName = '';
+let auditUrl = '';
 let errorCount = 0;
 
 // API key is stored securely on the server
@@ -424,6 +432,7 @@ async function runAudit() {
   const custom = document.getElementById('customCategory').value.trim();
   auditCat = custom || selectedCategory;
   auditName = document.getElementById('userName').value.trim();
+  auditUrl = document.getElementById('brandUrl').value.trim();
 
   if (!auditBrand || !auditCat) {
     document.getElementById('errorMsg').textContent = 'Please enter your brand name and select or type a category.';
@@ -516,10 +525,10 @@ function showEmailGate() {
   gate.innerHTML = `<div class="email-gate">
     <div style="margin-bottom:20px">${svgRing(overall, 100, 8, scoreColor(overall))}</div>
     <h2>${auditName ? auditName + ', your' : 'Your'} brand scored a <span style="color:${scoreColor(overall)}">${gi.g}</span></h2>
-    <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across 5 dimensions and specific recommendations to improve your AI search presence.</p>
+    <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to improve your AI search presence.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
-    <p style="font-size:11px;color:#444;margin-top:12px">We'll send you a copy too. No spam, ever.</p>
+    <p style="font-size:11px;color:#666;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
   </div>`;
 }
 
@@ -543,6 +552,7 @@ function unlockReport() {
       Name: auditName || 'Not provided',
       Email: email,
       Brand: auditBrand,
+      Website: auditUrl || 'Not provided',
       Category: auditCat,
       'Overall Score': `${overall}/100 (${grade})`,
       'Brand Discovery': calcScore('discovery', results['discovery']),
@@ -635,12 +645,19 @@ function renderReport() {
   h += '</div>';
 
   h += `<div class="cta-card">
-    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to fix this?</div>
-    <p style="font-size:14px;color:var(--text-dim);margin:0 0 20px;line-height:1.5">I help premium F&B brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
-    <a href="https://allykiel.carrd.co" target="_blank" class="cta-btn">Book a Free Strategy Call →</a>
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to improve these scores?</div>
+    <p style="font-size:14px;color:var(--text-dim);margin:0 0 24px;line-height:1.5">I help premium F&B brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="https://allykiel.carrd.co" target="_blank" class="cta-btn">Book a 15-min AI Visibility Review →</a>
+      <a href="mailto:allykiel@gmail.com?subject=AI%20Audit%20Report%20-%20${encodeURIComponent(auditBrand)}&body=Hi%20Ally%2C%20please%20send%20me%20the%20full%20report%20for%20${encodeURIComponent(auditBrand)}.%20Thanks!" style="display:inline-block;padding:14px 28px;border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);text-decoration:none;font-size:14px;font-weight:600;text-align:center">Email Me the Report</a>
+    </div>
+    <p style="font-size:11px;color:#555;margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
   </div>`;
 
-  h += `<div class="footer">AI Search Audit by Ally Kiel · allykiel.carrd.co</div>`;
+  h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:#666">
+    <span style="color:var(--gold);font-weight:500">Ally Kiel Consulting</span> · AI Search Strategy for Premium F&B Brands<br>
+    <a href="https://allykiel.carrd.co" target="_blank" style="color:var(--gold-dim);text-decoration:none;margin-top:4px;display:inline-block">allykiel.carrd.co</a>
+  </div>`;
   rep.innerHTML = h;
 }
 
