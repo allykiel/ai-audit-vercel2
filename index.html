@@ -59,12 +59,12 @@
   }
   h1 span { color: var(--gold); }
 
-  .subtitle { font-size: 16px; color: var(--text-dim); max-width: 540px; margin: 0 auto; line-height: 1.6; }
+  .subtitle { font-size: 16px; color: #ccc; max-width: 540px; margin: 0 auto; line-height: 1.6; }
 
   .section-label {
-    display: block; font-size: 12px; font-weight: 500;
+    display: block; font-size: 12px; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-dim); margin-bottom: 8px;
+    color: #e8e4de; margin-bottom: 8px;
   }
 
   .card {
@@ -78,11 +78,12 @@
   input[type="text"], input[type="email"] {
     width: 100%; padding: 14px 18px;
     background: rgba(0,0,0,0.4);
-    border: 1px solid var(--gold-dim); border-radius: 10px;
-    color: var(--text); font-size: 16px;
+    border: 1px solid rgba(200,169,126,0.2); border-radius: 10px;
+    color: #fff; font-size: 16px;
     font-family: var(--font-body);
     transition: all 0.2s ease;
   }
+  input::placeholder { color: #999; }
   input:focus {
     outline: none; border-color: var(--gold);
     box-shadow: 0 0 0 3px rgba(200,169,126,0.15);
@@ -92,12 +93,12 @@
 
   .chip {
     padding: 7px 14px; border-radius: 20px; font-size: 13px;
-    color: #c4beb6; cursor: pointer; transition: all 0.2s ease;
-    border: 1px solid rgba(200,169,126,0.2);
-    background: rgba(200,169,126,0.05); white-space: nowrap;
+    color: #e8e4de; cursor: pointer; transition: all 0.2s ease;
+    border: 1px solid rgba(200,169,126,0.3);
+    background: rgba(200,169,126,0.08); white-space: nowrap;
   }
-  .chip:hover { border-color: var(--gold); background: rgba(200,169,126,0.12); }
-  .chip.active { border-color: var(--gold); background: rgba(200,169,126,0.2); color: var(--gold); }
+  .chip:hover { border-color: var(--gold); background: rgba(200,169,126,0.15); }
+  .chip.active { border-color: var(--gold); background: rgba(200,169,126,0.25); color: #fff; font-weight: 600; }
 
   .btn-primary {
     width: 100%; padding: 16px;
@@ -197,7 +198,7 @@
   .hidden { display: none; }
 
   .social-proof { display: flex; gap: 24px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-  .proof-item { font-size: 15px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+  .proof-item { font-size: 15px; color: #ccc; display: flex; align-items: center; gap: 6px; }
   .proof-item span { color: var(--gold); font-weight: 600; }
 
   .error-banner {
@@ -226,7 +227,7 @@
       <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
       <div class="proof-item">⚡ Results in <span>~2 minutes</span></div>
     </div>
-    <p style="font-size:12px;color:#666;margin-top:14px">Built for premium Food &amp; Beverage brands</p>
+    <p style="font-size:12px;color:#bbb;margin-top:14px">Built for premium Food &amp; Beverage brands</p>
   </div>
 
   <div class="card" id="inputSection">
@@ -249,8 +250,8 @@
     </div>
     <div id="errorMsg" class="error hidden"></div>
     <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
-    <p style="font-size:11px; color:#666; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
-    <p style="font-size:10px; color:#555; text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
+    <p style="font-size:12px; color:#e8e4de; font-weight:600; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
+    <p style="font-size:11px; color:#bbb; text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
   </div>
 
   <div id="progress" class="hidden"></div>
@@ -528,7 +529,7 @@ function showEmailGate() {
     <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to improve your AI search presence.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
-    <p style="font-size:11px;color:#666;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
+    <p style="font-size:12px;color:#e8e4de;font-weight:600;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
   </div>`;
 }
 
@@ -651,12 +652,12 @@ function renderReport() {
       <a href="https://allykiel.carrd.co" target="_blank" class="cta-btn">Book a 15-min AI Visibility Review →</a>
       <a href="mailto:allykiel@gmail.com?subject=AI%20Audit%20Report%20-%20${encodeURIComponent(auditBrand)}&body=Hi%20Ally%2C%20please%20send%20me%20the%20full%20report%20for%20${encodeURIComponent(auditBrand)}.%20Thanks!" style="display:inline-block;padding:14px 28px;border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);text-decoration:none;font-size:14px;font-weight:600;text-align:center">Email Me the Report</a>
     </div>
-    <p style="font-size:11px;color:#555;margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
+    <p style="font-size:11px;color:#bbb;margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
   </div>`;
 
-  h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:#666">
-    <span style="color:var(--gold);font-weight:500">Ally Kiel Consulting</span> · AI Search Strategy for Premium F&B Brands<br>
-    <a href="https://allykiel.carrd.co" target="_blank" style="color:var(--gold-dim);text-decoration:none;margin-top:4px;display:inline-block">allykiel.carrd.co</a>
+  h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:#bbb">
+    <span style="color:var(--gold);font-weight:600">Ally Kiel Consulting</span> · AI Search Strategy for Premium F&B Brands<br>
+    <a href="https://allykiel.carrd.co" target="_blank" style="color:var(--gold);text-decoration:none;margin-top:4px;display:inline-block">allykiel.carrd.co</a>
   </div>`;
   rep.innerHTML = h;
 }
