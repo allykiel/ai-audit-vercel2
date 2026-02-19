@@ -268,14 +268,14 @@ const CATEGORIES = [
 ];
 
 const QUERIES = [
-  { id: "discovery", label: "Brand Discovery", desc: "Can AI find this brand when consumers search?",
-    tpl: (b,c) => `Search the web for "${b}" in the ${c} space. What do you find about this brand? Summarize their online presence, what they're known for, and how prominently they appear. If you find very little, say so clearly. You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"found": true, "summary": "2-3 sentences", "sources_found": ["domain1.com", "domain2.com"], "prominence": "high"}. The prominence field must be exactly one of: "high", "medium", "low", or "not_found".` },
-  { id: "category", label: "Category Authority", desc: "Is this brand recommended when consumers ask about the category?",
-    tpl: (b,c) => `Search the web for the best ${c} brands. List the top brands that come up most prominently. Is "${b}" among them? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"brand_mentioned": true, "top_brands_found": ["Brand1", "Brand2", "Brand3"], "brand_position": "top_tier", "category_leaders": "1-2 sentence summary"}. The brand_position field must be exactly one of: "top_tier", "mentioned", or "absent".` },
+  { id: "discovery", label: "Brand Discovery", desc: "Does AI surface this brand without being asked by name?",
+    tpl: (b,c) => `Search the web for the best ${c} to try. What brands come up? Without specifically searching for "${b}", does this brand appear naturally in recommendations, roundups, or guides for this category? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"brand_appeared_organically": true, "summary": "2-3 sentences about whether this brand shows up naturally when someone searches the category", "brands_that_appeared": ["Brand1", "Brand2", "Brand3"], "brand_ranking": "top_5", "total_sources_mentioning_brand": 3}. The brand_ranking field must be exactly one of: "top_5", "top_10", "mentioned_not_ranked", or "absent". Set brand_appeared_organically to true ONLY if "${b}" appeared in the results without you specifically searching for it by name.` },
+  { id: "category", label: "Category Authority", desc: "Is this brand a go-to recommendation in its category?",
+    tpl: (b,c) => `Search the web: "What is the best ${c}?" and "What ${c} should I buy?" Look at the top recommendations. Is "${b}" consistently recommended as a top choice? Is it positioned as a leader or authority in this category? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"brand_recommended": true, "top_brands_found": ["Brand1", "Brand2", "Brand3"], "brand_position": "top_tier", "times_mentioned": 2, "category_leaders": "1-2 sentence summary of who dominates this category"}. The brand_position must be exactly one of: "top_tier" (consistently in top 3), "competitive" (appears but not top 3), "mentioned" (shows up once or in passing), or "absent" (does not appear at all).` },
   { id: "reputation", label: "Brand Sentiment & Reviews", desc: "What does AI surface about brand quality and reputation?",
     tpl: (b,c) => `Search the web for reviews, press coverage, and reputation of "${b}" (${c}). What is the general sentiment? Are there notable press mentions, awards, or reviews? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"sentiment": "positive", "notable_mentions": ["mention1", "mention2"], "review_presence": "strong", "summary": "2-3 sentences"}. The sentiment field must be exactly one of: "positive", "mixed", "negative", or "insufficient_data". The review_presence field must be exactly one of: "strong", "moderate", "weak", or "none".` },
-  { id: "competitive_purchase", label: "Competitive & Purchase Position", desc: "How does AI rank this brand vs competitors and for purchase?",
-    tpl: (b,c) => `Search the web for the best ${c} brands to buy. Compare "${b}" to its main competitors. Who are the top competitors? How does "${b}" differentiate? Is "${b}" recommended when someone wants to purchase? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"main_competitors": ["Comp1", "Comp2", "Comp3"], "differentiation": "what makes the brand unique", "competitive_position": "competitive", "brand_recommended_for_purchase": true, "purchase_channels_found": ["channel1.com", "channel2.com"], "buy_intent_visibility": "medium", "summary": "2-3 sentences"}. The competitive_position field must be exactly one of: "leader", "competitive", "underdog", or "invisible". The buy_intent_visibility field must be exactly one of: "high", "medium", "low", or "none".` }
+  { id: "competitive_purchase", label: "Competitive & Purchase Position", desc: "Does AI recommend this brand when consumers are ready to buy?",
+    tpl: (b,c) => `Search the web: "Where can I buy the best ${c}?" and "best ${c} to buy online". Does "${b}" appear as a recommended purchase? Compare "${b}" to the brands that DO appear. You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"main_competitors": ["Comp1", "Comp2", "Comp3"], "differentiation": "what makes the brand unique if anything was found", "competitive_position": "competitive", "brand_recommended_for_purchase": true, "purchase_channels_found": ["channel1.com", "channel2.com"], "buy_intent_visibility": "medium", "summary": "2-3 sentences"}. The competitive_position field must be exactly one of: "leader", "competitive", "underdog", or "invisible". The buy_intent_visibility field must be exactly one of: "high", "medium", "low", or "none". Set brand_recommended_for_purchase to true ONLY if "${b}" specifically appears in purchase recommendations.` }
 ];
 
 let selectedCategory = '';
@@ -382,27 +382,45 @@ function calcScore(id, data) {
   try {
     switch(id) {
       case 'discovery':
-        if (data.found) s += 40;
-        if (data.prominence === 'high') s += 40; else if (data.prominence === 'medium') s += 25; else if (data.prominence === 'low') s += 10;
-        if ((data.sources_found||[]).length > 3) s += 20; else if ((data.sources_found||[]).length > 1) s += 10;
+        // Did the brand appear WITHOUT searching by name? This is the real test.
+        if (data.brand_appeared_organically) s += 45; // Big reward for organic appearance
+        if (data.brand_ranking === 'top_5') s += 35;
+        else if (data.brand_ranking === 'top_10') s += 20;
+        else if (data.brand_ranking === 'mentioned_not_ranked') s += 8;
+        // absent = 0
+        if ((data.total_sources_mentioning_brand||0) >= 3) s += 20;
+        else if ((data.total_sources_mentioning_brand||0) >= 1) s += 10;
         break;
       case 'category':
-        if (data.brand_mentioned) s += 35;
-        if (data.brand_position === 'top_tier') s += 45; else if (data.brand_position === 'mentioned') s += 20;
-        if ((data.top_brands_found||[]).length > 0) s += 20;
+        // Is the brand a go-to recommendation? Stricter tiers.
+        if (data.brand_position === 'top_tier') s += 50;
+        else if (data.brand_position === 'competitive') s += 30;
+        else if (data.brand_position === 'mentioned') s += 12;
+        // absent = 0
+        if ((data.times_mentioned||0) >= 3) s += 30;
+        else if ((data.times_mentioned||0) >= 2) s += 20;
+        else if ((data.times_mentioned||0) >= 1) s += 10;
+        if (data.brand_recommended) s += 20;
         break;
       case 'reputation':
-        if (data.sentiment === 'positive') s += 40; else if (data.sentiment === 'mixed') s += 20;
-        if (data.review_presence === 'strong') s += 35; else if (data.review_presence === 'moderate') s += 20; else if (data.review_presence === 'weak') s += 10;
-        if ((data.notable_mentions||[]).length > 2) s += 25; else if ((data.notable_mentions||[]).length > 0) s += 15;
+        if (data.sentiment === 'positive') s += 35; else if (data.sentiment === 'mixed') s += 15;
+        if (data.review_presence === 'strong') s += 30; else if (data.review_presence === 'moderate') s += 18; else if (data.review_presence === 'weak') s += 8;
+        if ((data.notable_mentions||[]).length > 3) s += 35;
+        else if ((data.notable_mentions||[]).length > 1) s += 20;
+        else if ((data.notable_mentions||[]).length > 0) s += 10;
         break;
       case 'competitive_purchase':
-        if (data.competitive_position === 'leader') s += 25; else if (data.competitive_position === 'competitive') s += 18; else if (data.competitive_position === 'underdog') s += 8;
-        if (data.differentiation && data.differentiation.length > 20) s += 15;
-        if ((data.main_competitors||[]).length > 0) s += 10;
-        if (data.brand_recommended_for_purchase) s += 20;
-        if (data.buy_intent_visibility === 'high') s += 18; else if (data.buy_intent_visibility === 'medium') s += 10; else if (data.buy_intent_visibility === 'low') s += 5;
-        if ((data.purchase_channels_found||[]).length > 1) s += 12; else if ((data.purchase_channels_found||[]).length > 0) s += 6;
+        // Does AI actually recommend buying this brand?
+        if (data.brand_recommended_for_purchase) s += 40; // Biggest weight - are you recommended?
+        if (data.competitive_position === 'leader') s += 25;
+        else if (data.competitive_position === 'competitive') s += 15;
+        else if (data.competitive_position === 'underdog') s += 5;
+        // invisible = 0
+        if (data.buy_intent_visibility === 'high') s += 20;
+        else if (data.buy_intent_visibility === 'medium') s += 10;
+        else if (data.buy_intent_visibility === 'low') s += 3;
+        if ((data.purchase_channels_found||[]).length > 2) s += 15;
+        else if ((data.purchase_channels_found||[]).length > 0) s += 8;
         break;
     }
   } catch(e) { console.error('Scoring error:', e); }
@@ -411,10 +429,10 @@ function calcScore(id, data) {
 
 function scoreColor(s) { return s >= 70 ? '#4ade80' : s >= 40 ? '#c8a97e' : '#ef4444'; }
 function gradeInfo(s) {
-  if (s >= 80) return { g: 'A', l: 'Excellent AI Visibility' };
-  if (s >= 65) return { g: 'B', l: 'Good — Room to Grow' };
-  if (s >= 45) return { g: 'C', l: 'Moderate — Significant Gaps' };
-  if (s >= 25) return { g: 'D', l: 'Weak — Major Blind Spots' };
+  if (s >= 85) return { g: 'A', l: 'Excellent — AI Actively Recommends You' };
+  if (s >= 70) return { g: 'B', l: 'Good — Visible but Not Dominant' };
+  if (s >= 50) return { g: 'C', l: 'Moderate — Significant Gaps' };
+  if (s >= 30) return { g: 'D', l: 'Weak — Rarely Recommended' };
   return { g: 'F', l: 'Invisible to AI Search' };
 }
 
@@ -573,14 +591,15 @@ function genRecs() {
   const recs = [];
   const sc = {};
   for (const q of QUERIES) sc[q.id] = calcScore(q.id, results[q.id]);
-  if (sc.discovery < 40) recs.push({ p:'Critical', a:'Brand Discovery', t:'Your brand is nearly invisible to AI search. You need a foundational content strategy — consistent publishing, structured data, and presence across platforms AI models reference.' });
-  else if (sc.discovery < 70) recs.push({ p:'High', a:'Brand Discovery', t:'AI can find you, but your presence is thin. Strengthen your content footprint with brand storytelling, founder narratives, and product-specific pages.' });
-  if (sc.category < 40) recs.push({ p:'Critical', a:'Category Authority', t:"When consumers ask AI for the best in your category, you're not in the conversation. You need strategic content positioning you as a category leader." });
-  else if (sc.category < 70) recs.push({ p:'High', a:'Category Authority', t:"You appear in some category conversations but aren't a top recommendation. Increase authority through press placements and category leadership content." });
-  if (sc.reputation < 40) recs.push({ p:'High', a:'Reputation & Reviews', t:'AI finds little about your reputation. Cultivate reviews, seek press coverage, and build third-party validation AI can reference.' });
-  if (sc.competitive_purchase < 40) recs.push({ p:'Critical', a:'Competitive & Purchase Position', t:"AI doesn't clearly differentiate you from competitors and isn't recommending you when consumers are ready to buy. Sharpen your positioning and ensure your purchase channels are well-indexed." });
-  else if (sc.competitive_purchase < 70) recs.push({ p:'High', a:'Competitive & Purchase Position', t:"You're in the conversation but not a top pick. Strengthen competitive differentiation and make sure AI can connect consumers directly to purchase options." });
-  if (recs.length === 0) recs.push({ p:'Optimize', a:'Overall', t:'Your AI visibility is strong. Focus on maintaining presence and expanding into adjacent categories.' });
+  if (sc.discovery < 30) recs.push({ p:'Critical', a:'Brand Discovery', t:"AI doesn't surface your brand when consumers search your category. You need content that connects your brand to the category terms consumers actually use — not just your brand name." });
+  else if (sc.discovery < 60) recs.push({ p:'High', a:'Brand Discovery', t:"Your brand appears in some searches but isn't a consistent recommendation. You need broader presence across the publications, platforms, and roundups that AI models reference." });
+  if (sc.category < 30) recs.push({ p:'Critical', a:'Category Authority', t:"When consumers ask AI for the best in your category, you're not in the answer. You need strategic content positioning — press placements, expert roundups, and category-defining content that makes AI see you as a leader." });
+  else if (sc.category < 60) recs.push({ p:'High', a:'Category Authority', t:"You appear in some category conversations but aren't a top recommendation. Increase authority through consistent press placements, partnerships, and content that AI associates with category expertise." });
+  if (sc.reputation < 40) recs.push({ p:'High', a:'Reputation & Reviews', t:'AI finds limited information about your reputation. Cultivate reviews on key platforms, seek press coverage, and build a trail of third-party validation that AI can reference and trust.' });
+  else if (sc.reputation < 70) recs.push({ p:'Medium', a:'Reputation & Reviews', t:'Your reputation signals are moderate. Strengthen them with more press coverage, awards recognition, and reviews across platforms AI models tend to reference.' });
+  if (sc.competitive_purchase < 30) recs.push({ p:'Critical', a:'Competitive & Purchase Position', t:"When consumers ask AI what to buy in your category, your brand doesn't come up. You need to ensure your products are visible on the platforms and in the content that AI references for purchase recommendations." });
+  else if (sc.competitive_purchase < 60) recs.push({ p:'High', a:'Competitive & Purchase Position', t:"You're in the conversation but not a top purchase recommendation. Strengthen your presence on retail platforms, optimize product pages, and build content that connects your brand to buying decisions." });
+  if (recs.length === 0) recs.push({ p:'Optimize', a:'Overall', t:'Your AI visibility is strong across all dimensions. Focus on maintaining your presence, expanding into adjacent categories, and monitoring for changes as AI platforms evolve.' });
   return recs;
 }
 
