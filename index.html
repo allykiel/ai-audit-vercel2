@@ -227,7 +227,7 @@
       <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
       <div class="proof-item">⚡ Results in <span>~2 minutes</span></div>
     </div>
-    <p style="font-size:12px;color:#bbb;margin-top:14px">Built for premium Food &amp; Beverage brands</p>
+    <p style="font-size:12px;color:#bbb;margin-top:14px">Built for premium F&amp;B, restaurant, hospitality, and CPG brands</p>
   </div>
 
   <div class="card" id="inputSection">
@@ -264,7 +264,9 @@ const CATEGORIES = [
   "Premium olive oil", "Artisan hot sauce", "Specialty coffee",
   "Natural wine", "Craft spirits", "Artisan chocolate",
   "Specialty condiments", "Premium tea", "Gourmet snacks",
-  "Farm-to-table restaurant", "Chef-driven restaurant group", "Specialty bakery"
+  "Farm-to-table restaurant", "Chef-driven restaurant group", "Specialty bakery",
+  "Fine dining restaurant", "Private dining venue", "Winery & tasting room",
+  "Boutique hotel & hospitality", "Premium CPG brand", "Specialty beverage brand"
 ];
 
 const QUERIES = [
@@ -543,7 +545,9 @@ function showEmailGate() {
   gate.classList.remove('hidden');
   gate.innerHTML = `<div class="email-gate">
     <div style="margin-bottom:20px">${svgRing(overall, 100, 8, scoreColor(overall))}</div>
-    <h2>${auditName ? auditName + ', your' : 'Your'} brand scored a <span style="color:${scoreColor(overall)}">${gi.g}</span></h2>
+    <div style="font-size:64px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)};margin-bottom:8px">${overall}%</div>
+    <h2 style="font-size:20px;margin-bottom:8px">${auditName ? auditName + ', your' : 'Your'} brand appeared in <span style="color:${scoreColor(overall)}">${overall}%</span> of AI recommendation moments</h2>
+    <p style="font-size:13px;color:var(--text-dim);margin-bottom:8px">Brands with strong AI visibility typically appear in 25–40% of category prompts. The average for brands that haven't optimized: 10–15%.</p>
     <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to improve your AI search presence.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
@@ -621,6 +625,7 @@ function renderReport() {
       <div style="text-align:left">
         <div style="font-size:48px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)}">${gi.g}</div>
         <div style="font-size:14px;color:var(--text-dim);margin-top:4px">${gi.l}</div>
+        <div style="font-size:13px;color:#888;margin-top:6px">${overall}% AI recommendation inclusion rate</div>
       </div>
     </div>
     <div style="font-size:13px;color:#666;margin-top:12px">${auditCat} · Audited ${today}</div>
@@ -664,21 +669,104 @@ function renderReport() {
   });
   h += '</div>';
 
+  h += `<div class="rec-panel" style="margin-bottom:24px;">
+  <h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 8px;color:#fff">What Is This Gap Costing You?</h3>
+  <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin:0 0 24px">Your inclusion rate is the starting point for estimating what AI invisibility costs your brand annually. The calculator below gives you a conservative revenue estimate based on your business type and average order value.</p>
+
+  <div style="margin-bottom:20px;">
+    <label class="section-label">Business Type</label>
+    <div class="chip-grid" id="calcTypeGrid">
+      <span class="chip" onclick="selectCalcType('product')" id="type-product">Product Brand (CPG / Food / Beverage / Wine)</span>
+      <span class="chip" onclick="selectCalcType('restaurant')" id="type-restaurant">Restaurant / Fine Dining</span>
+      <span class="chip" onclick="selectCalcType('winery')" id="type-winery">Winery / Hospitality Venue</span>
+    </div>
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <label class="section-label" id="aovLabel">Average Order Value ($)</label>
+    <input type="number" id="calcAOV" placeholder="e.g. 150" style="max-width:240px;padding:12px 16px;background:rgba(0,0,0,0.4);border:1px solid rgba(200,169,126,0.2);border-radius:10px;color:#fff;font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <label class="section-label">Your AI Inclusion Rate (%)</label>
+    <input type="number" id="calcInclusion" value="${overall}" style="max-width:240px;padding:12px 16px;background:rgba(0,0,0,0.4);border:1px solid rgba(200,169,126,0.2);border-radius:10px;color:#fff;font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
+    <p style="font-size:11px;color:#666;margin-top:6px">Pre-filled from your audit result. You can adjust it.</p>
+  </div>
+
+  <div id="calcResult" style="display:none;padding:24px;background:linear-gradient(135deg,rgba(200,169,126,0.08),rgba(200,169,126,0.02));border:1px solid rgba(200,169,126,0.2);border-radius:12px;text-align:center;margin-top:8px;">
+    <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Estimated Annual Revenue Influenced by Your Brand Selection Gap</div>
+    <div id="calcOutput" style="font-size:48px;font-weight:700;font-family:var(--font-display);color:#c8a97e;line-height:1;margin-bottom:8px;"></div>
+    <div style="font-size:12px;color:#666;margin-bottom:16px">Conservative estimate based on 8% conversion rate and 28% competitor benchmark visibility.<br>Actual exposure is likely higher — AI-referred buyers convert at 11–14% (Salesforce, 2025).</div>
+    <div id="calcStat" style="font-size:13px;color:var(--text-dim);padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;"></div>
+  </div>
+
+  <div id="calcAboveBenchmark" style="display:none;padding:20px;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.15);border-radius:12px;text-align:center;margin-top:8px;">
+    <div style="font-size:14px;color:#4ade80;font-weight:600;margin-bottom:6px">You're above the category benchmark</div>
+    <div style="font-size:13px;color:var(--text-dim)">Your inclusion rate exceeds the 28% competitor average. Book a call to discuss how to extend that lead.</div>
+  </div>
+</div>`;
+
   h += `<div class="cta-card">
     <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to improve these scores?</div>
-    <p style="font-size:14px;color:var(--text-dim);margin:0 0 24px;line-height:1.5">I help premium F&B brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
+    <p style="font-size:14px;color:var(--text-dim);margin:0 0 24px;line-height:1.5">I help premium brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-      <a href="https://allykiel.carrd.co" target="_blank" class="cta-btn">Book a 15-min AI Visibility Review →</a>
+      <a href="https://calendly.com/ally-allykielconsulting/discovery" target="_blank" class="cta-btn">Book a 15-min AI Visibility Review →</a>
       <a href="mailto:allykiel@gmail.com?subject=AI%20Audit%20Report%20-%20${encodeURIComponent(auditBrand)}&body=Hi%20Ally%2C%20please%20send%20me%20the%20full%20report%20for%20${encodeURIComponent(auditBrand)}.%20Thanks!" style="display:inline-block;padding:14px 28px;border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);text-decoration:none;font-size:14px;font-weight:600;text-align:center">Email Me the Report</a>
     </div>
     <p style="font-size:11px;color:#bbb;margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
   </div>`;
 
   h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:#bbb">
-    <span style="color:var(--gold);font-weight:600">Ally Kiel Consulting</span> · AI Search Strategy for Premium F&B Brands<br>
-    <a href="https://allykiel.carrd.co" target="_blank" style="color:var(--gold);text-decoration:none;margin-top:4px;display:inline-block">allykiel.carrd.co</a>
+    <span style="color:var(--gold);font-weight:600">Ally Kiel Consulting</span> · AI Discoverability Strategy for Premium Brands<br>
+    <a href="https://allykielconsulting.com" target="_blank" style="color:var(--gold);text-decoration:none;margin-top:4px;display:inline-block">allykielconsulting.com</a>
   </div>`;
   rep.innerHTML = h;
+}
+
+let calcType = '';
+const CALC_DEFAULTS = {
+  product: { moments: 350, label: 'Average Order Value ($)', stat: 'AI-referred shoppers convert at 11.4% — more than double organic search (Salesforce, 2025).' },
+  restaurant: { moments: 500, label: 'Average Cover or Reservation Value ($)', stat: '83% of restaurants are currently invisible in AI search (Uberall, May 2026).' },
+  winery: { moments: 200, label: 'Average Visit, Tasting, or Order Value ($)', stat: 'AI chatbot referrals to hospitality sites grew 8x year-over-year in 2025.' }
+};
+
+function selectCalcType(type) {
+  calcType = type;
+  document.querySelectorAll('#calcTypeGrid .chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('type-' + type).classList.add('active');
+  const defaults = CALC_DEFAULTS[type];
+  document.getElementById('aovLabel').textContent = defaults.label;
+  calcGap();
+}
+
+function calcGap() {
+  if (!calcType) return;
+  const aov = parseFloat(document.getElementById('calcAOV').value);
+  const inclusion = parseFloat(document.getElementById('calcInclusion').value);
+  if (!aov || isNaN(aov) || isNaN(inclusion)) return;
+
+  const defaults = CALC_DEFAULTS[calcType];
+  const competitorBenchmark = 0.28;
+  const conversionRate = 0.08;
+  const inclusionDecimal = inclusion / 100;
+
+  if (inclusionDecimal >= competitorBenchmark) {
+    document.getElementById('calcResult').style.display = 'none';
+    document.getElementById('calcAboveBenchmark').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('calcAboveBenchmark').style.display = 'none';
+  const missedMoments = (competitorBenchmark - inclusionDecimal) * defaults.moments;
+  const annualRevenue = missedMoments * conversionRate * aov * 12;
+
+  const formatted = annualRevenue >= 1000
+    ? '$' + Math.round(annualRevenue / 1000) + 'K'
+    : '$' + Math.round(annualRevenue);
+
+  document.getElementById('calcOutput').textContent = formatted;
+  document.getElementById('calcStat').textContent = defaults.stat;
+  document.getElementById('calcResult').style.display = 'block';
 }
 
 function resetAudit() {
