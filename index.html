@@ -430,12 +430,11 @@ function calcScore(id, data) {
 }
 
 function scoreColor(s) { return s >= 70 ? '#4ade80' : s >= 40 ? '#c8a97e' : '#ef4444'; }
-function gradeInfo(s) {
-  if (s >= 85) return { g: 'A', l: 'Excellent — AI Actively Recommends You' };
-  if (s >= 70) return { g: 'B', l: 'Good — Visible but Not Dominant' };
-  if (s >= 50) return { g: 'C', l: 'Moderate — Significant Gaps' };
-  if (s >= 30) return { g: 'D', l: 'Weak — Rarely Recommended' };
-  return { g: 'F', l: 'Invisible to AI Search' };
+function scoreLabel(s) {
+  if (s >= 76) return 'Strong AI Visibility';
+  if (s >= 56) return 'Moderate AI Visibility';
+  if (s >= 31) return 'Emerging AI Visibility';
+  return 'Limited AI Visibility';
 }
 
 function svgRing(score, size, sw, color) {
@@ -540,15 +539,14 @@ function showFatalError() {
 
 function showEmailGate() {
   const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
-  const gi = gradeInfo(overall);
   const gate = document.getElementById('emailGate');
   gate.classList.remove('hidden');
   gate.innerHTML = `<div class="email-gate">
     <div style="margin-bottom:20px">${svgRing(overall, 100, 8, scoreColor(overall))}</div>
-    <div style="font-size:64px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)};margin-bottom:8px">${overall}%</div>
-    <h2 style="font-size:20px;margin-bottom:8px">${auditName ? auditName + ', your' : 'Your'} brand appeared in <span style="color:${scoreColor(overall)}">${overall}%</span> of AI recommendation moments</h2>
-    <p style="font-size:13px;color:var(--text-dim);margin-bottom:8px">Brands with strong AI visibility typically appear in 25–40% of category prompts. The average for brands that haven't optimized: 10–15%.</p>
-    <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to improve your AI search presence.</p>
+    <div style="font-size:64px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)};margin-bottom:4px">${overall}</div>
+    <div style="font-size:16px;color:${scoreColor(overall)};font-weight:600;margin-bottom:16px">${scoreLabel(overall)}</div>
+    <h2 style="font-size:20px;margin-bottom:16px">${auditName ? auditName + ', your' : 'Your'} brand scored <span style="color:${scoreColor(overall)}">${overall}/100</span></h2>
+    <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to close your gaps.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
     <p style="font-size:12px;color:#e8e4de;font-weight:600;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
@@ -564,20 +562,19 @@ function unlockReport() {
 
   // Calculate overall score for the email
   const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
-  const grade = gradeInfo(overall).g;
 
   // Send lead info to your email via FormSubmit
   fetch('https://formsubmit.co/ajax/allykiel@gmail.com', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({
-      _subject: `New AI Audit Lead: ${auditBrand} (${grade})`,
+      _subject: `New AI Audit Lead: ${auditBrand} — ${scoreLabel(overall)}`,
       Name: auditName || 'Not provided',
       Email: email,
       Brand: auditBrand,
       Website: auditUrl || 'Not provided',
       Category: auditCat,
-      'Overall Score': `${overall}/100 (${grade})`,
+      'Overall Score': `${overall}/100 — ${scoreLabel(overall)}`,
       'Brand Discovery': calcScore('discovery', results['discovery']),
       'Category Authority': calcScore('category', results['category']),
       'Reputation': calcScore('reputation', results['reputation']),
@@ -611,7 +608,6 @@ function renderReport() {
   const rep = document.getElementById('report');
   rep.classList.remove('hidden');
   const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
-  const gi = gradeInfo(overall);
   const recs = genRecs();
   const today = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
 
@@ -623,9 +619,8 @@ function renderReport() {
     <div style="display:flex;justify-content:center;align-items:center;gap:32px;margin-bottom:16px">
       ${svgRing(overall, 120, 10, scoreColor(overall))}
       <div style="text-align:left">
-        <div style="font-size:48px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)}">${gi.g}</div>
-        <div style="font-size:14px;color:var(--text-dim);margin-top:4px">${gi.l}</div>
-        <div style="font-size:13px;color:#888;margin-top:6px">${overall}% AI recommendation inclusion rate</div>
+        <div style="font-size:36px;font-weight:700;font-family:var(--font-display);line-height:1;color:${scoreColor(overall)}">${overall}/100</div>
+        <div style="font-size:14px;color:var(--text-dim);margin-top:4px">${scoreLabel(overall)}</div>
       </div>
     </div>
     <div style="font-size:13px;color:#666;margin-top:12px">${auditCat} · Audited ${today}</div>
@@ -696,13 +691,13 @@ function renderReport() {
   <div id="calcResult" style="display:none;padding:24px;background:linear-gradient(135deg,rgba(200,169,126,0.08),rgba(200,169,126,0.02));border:1px solid rgba(200,169,126,0.2);border-radius:12px;text-align:center;margin-top:8px;">
     <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Estimated Annual Revenue Influenced by Your Brand Selection Gap</div>
     <div id="calcOutput" style="font-size:48px;font-weight:700;font-family:var(--font-display);color:#c8a97e;line-height:1;margin-bottom:8px;"></div>
-    <div style="font-size:12px;color:#666;margin-bottom:16px">Conservative estimate based on 8% conversion rate and 28% competitor benchmark visibility.<br>Actual exposure is likely higher — AI-referred buyers convert at 11–14% (Salesforce, 2025).</div>
+    <div style="font-size:12px;color:#666;margin-bottom:16px">Conservative estimate based on 8% conversion rate. Top performers in your category maintain 70%+ AI visibility. Actual exposure may be higher — AI-referred buyers convert at 11–14% (Salesforce, 2025).</div>
     <div id="calcStat" style="font-size:13px;color:var(--text-dim);padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;"></div>
   </div>
 
   <div id="calcAboveBenchmark" style="display:none;padding:20px;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.15);border-radius:12px;text-align:center;margin-top:8px;">
-    <div style="font-size:14px;color:#4ade80;font-weight:600;margin-bottom:6px">You're above the category benchmark</div>
-    <div style="font-size:13px;color:var(--text-dim)">Your inclusion rate exceeds the 28% competitor average. Book a call to discuss how to extend that lead.</div>
+    <div style="font-size:14px;color:#4ade80;font-weight:600;margin-bottom:6px">You're above the category average — but top performers score 70+. Here's what the remaining gap costs.</div>
+    <div style="font-size:13px;color:var(--text-dim)">Book a call to discuss how to close the gap and reach the top tier.</div>
   </div>
 </div>`;
 
@@ -725,9 +720,9 @@ function renderReport() {
 
 let calcType = '';
 const CALC_DEFAULTS = {
-  product: { moments: 350, label: 'Average Order Value ($)', stat: 'AI-referred shoppers convert at 11.4% — more than double organic search (Salesforce, 2025).' },
-  restaurant: { moments: 500, label: 'Average Cover or Reservation Value ($)', stat: '83% of restaurants are currently invisible in AI search (Uberall, May 2026).' },
-  winery: { moments: 200, label: 'Average Visit, Tasting, or Order Value ($)', stat: 'AI chatbot referrals to hospitality sites grew 8x year-over-year in 2025.' }
+  product: { moments: 200, label: 'Average Order Value ($)', aovHint: 'e.g. 85 (single order) or 165 (bundle/subscription)', stat: 'AI-referred shoppers convert at 11.4% — more than double organic search (Salesforce, 2025).' },
+  restaurant: { moments: 300, label: 'Average Cover or Reservation Value ($)', aovHint: 'e.g. 120 (cover) or 400 (private dining inquiry)', stat: '83% of restaurants are currently invisible in AI search (Uberall, May 2026).' },
+  winery: { moments: 150, label: 'Average Visit, Tasting, or Order Value ($)', aovHint: 'e.g. 85 (tasting) or 250 (tasting + bottle purchase)', stat: 'AI chatbot referrals to hospitality sites grew 8x year-over-year in 2025.' }
 };
 
 function selectCalcType(type) {
@@ -746,7 +741,7 @@ function calcGap() {
   if (!aov || isNaN(aov) || isNaN(inclusion)) return;
 
   const defaults = CALC_DEFAULTS[calcType];
-  const competitorBenchmark = 0.28;
+  const competitorBenchmark = 0.70;
   const conversionRate = 0.08;
   const inclusionDecimal = inclusion / 100;
 
