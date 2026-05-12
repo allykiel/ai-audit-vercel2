@@ -239,6 +239,7 @@
       <label class="section-label">Category</label>
       <div class="chip-grid" id="chipGrid"></div>
       <input type="text" id="customCategory" placeholder="Or type your category...">
+      <p style="font-size:11px;color:#888;margin-top:8px;">Be specific — "non-alcoholic functional beverage" outperforms "beverage brand." The more precise your category, the more accurate your audit.</p>
     </div>
     <div class="field">
       <label class="section-label">Your Name</label>
@@ -261,12 +262,30 @@
 
 <script>
 const CATEGORIES = [
-  "Premium olive oil", "Artisan hot sauce", "Specialty coffee",
-  "Natural wine", "Craft spirits", "Artisan chocolate",
-  "Specialty condiments", "Premium tea", "Gourmet snacks",
-  "Farm-to-table restaurant", "Chef-driven restaurant group", "Specialty bakery",
-  "Fine dining restaurant", "Private dining venue", "Winery & tasting room",
-  "Boutique hotel & hospitality", "Premium CPG brand", "Specialty beverage brand"
+  "Non-alcoholic functional beverage",
+  "Craft spirits & distillery",
+  "Natural & organic wine",
+  "Specialty coffee & tea",
+  "Mindful drinking & social tonic",
+  "Premium beer & craft brewing",
+  "Premium olive oil",
+  "Artisan hot sauce & condiments",
+  "Specialty chocolate & confections",
+  "Gourmet snacks & crackers",
+  "Artisan bread & bakery",
+  "Premium pasta & grains",
+  "Fine dining restaurant",
+  "Private dining venue",
+  "Farm-to-table restaurant",
+  "Chef-driven restaurant group",
+  "Boutique hotel & hospitality",
+  "Winery & tasting room",
+  "Vineyard experience & wine tourism",
+  "Better-for-you snacks",
+  "Functional foods & supplements",
+  "Premium CPG brand",
+  "Specialty food & grocery",
+  "Sustainable & regenerative food brand"
 ];
 
 const QUERIES = [
@@ -666,7 +685,9 @@ function renderReport() {
 
   h += `<div class="rec-panel" style="margin-bottom:24px;">
   <h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 8px;color:#fff">What Is This Gap Costing You?</h3>
-  <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin:0 0 24px">Your inclusion rate is the starting point for estimating what AI invisibility costs your brand annually. The calculator below gives you a conservative revenue estimate based on your business type and average order value.</p>
+  <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin:0 0 24px">Your inclusion rate is the starting point. Select your business type below to calculate the annual revenue influenced by your brand selection gap.</p>
+
+  <p style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:16px;">Select your business type to get started</p>
 
   <div style="margin-bottom:20px;">
     <label class="section-label">Business Type</label>
@@ -675,6 +696,15 @@ function renderReport() {
       <span class="chip" onclick="selectCalcType('restaurant')" id="type-restaurant">Restaurant / Fine Dining</span>
       <span class="chip" onclick="selectCalcType('winery')" id="type-winery">Winery / Hospitality Venue</span>
     </div>
+  </div>
+
+  <div id="product-value-toggle" style="display:none;margin-bottom:20px;">
+    <label class="section-label">How should we calculate value?</label>
+    <div class="chip-grid">
+      <span class="chip active" onclick="selectValueType('single')" id="value-single">Single order value</span>
+      <span class="chip" onclick="selectValueType('subscription')" id="value-subscription">Annual subscriber value (LTV)</span>
+    </div>
+    <p style="font-size:11px;color:#666;margin-top:6px;">Use single order value for one-time purchase brands. Use annual subscriber value if you have a subscription program — e.g. a subscriber worth $300/year.</p>
   </div>
 
   <div style="margin-bottom:20px;">
@@ -719,18 +749,52 @@ function renderReport() {
 }
 
 let calcType = '';
+let valueType = 'single';
 const CALC_DEFAULTS = {
-  product: { moments: 200, label: 'Average Order Value ($)', aovHint: 'e.g. 85 (single order) or 165 (bundle/subscription)', stat: 'AI-referred shoppers convert at 11.4% — more than double organic search (Salesforce, 2025).' },
-  restaurant: { moments: 300, label: 'Average Cover or Reservation Value ($)', aovHint: 'e.g. 120 (cover) or 400 (private dining inquiry)', stat: '83% of restaurants are currently invisible in AI search (Uberall, May 2026).' },
-  winery: { moments: 150, label: 'Average Visit, Tasting, or Order Value ($)', aovHint: 'e.g. 85 (tasting) or 250 (tasting + bottle purchase)', stat: 'AI chatbot referrals to hospitality sites grew 8x year-over-year in 2025.' }
+  product: { moments: 200, stat: 'AI-referred shoppers convert at 11.4% — more than double organic search (Salesforce, 2025).' },
+  restaurant: { moments: 300, stat: '83% of restaurants are currently invisible in AI search (Uberall, May 2026).' },
+  winery: { moments: 150, stat: 'AI chatbot referrals to hospitality sites grew 8x year-over-year in 2025.' }
 };
 
 function selectCalcType(type) {
   calcType = type;
   document.querySelectorAll('#calcTypeGrid .chip').forEach(c => c.classList.remove('active'));
   document.getElementById('type-' + type).classList.add('active');
-  const defaults = CALC_DEFAULTS[type];
-  document.getElementById('aovLabel').textContent = defaults.label;
+
+  const toggle = document.getElementById('product-value-toggle');
+  if (type === 'product') {
+    toggle.style.display = 'block';
+    valueType = 'single';
+    document.querySelectorAll('#product-value-toggle .chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('value-single').classList.add('active');
+    document.getElementById('aovLabel').textContent = 'Average Order Value ($)';
+    document.getElementById('calcAOV').placeholder = 'e.g. 35 (single order) or 85 (bundle)';
+  } else {
+    toggle.style.display = 'none';
+    valueType = 'single';
+    if (type === 'restaurant') {
+      document.getElementById('aovLabel').textContent = 'Average Cover or Reservation Value ($)';
+      document.getElementById('calcAOV').placeholder = 'e.g. 120 (cover) or 400 (private dining inquiry)';
+    } else if (type === 'winery') {
+      document.getElementById('aovLabel').textContent = 'Average Visit, Tasting, or Order Value ($)';
+      document.getElementById('calcAOV').placeholder = 'e.g. 85 (tasting) or 250 (tasting + bottle purchase)';
+    }
+  }
+  calcGap();
+}
+
+function selectValueType(type) {
+  valueType = type;
+  document.querySelectorAll('#product-value-toggle .chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('value-' + type).classList.add('active');
+
+  if (type === 'single') {
+    document.getElementById('aovLabel').textContent = 'Average Order Value ($)';
+    document.getElementById('calcAOV').placeholder = 'e.g. 35 (single order) or 85 (bundle)';
+  } else {
+    document.getElementById('aovLabel').textContent = 'Annual Subscriber Value ($)';
+    document.getElementById('calcAOV').placeholder = 'e.g. 300 (annual subscription value per customer)';
+  }
   calcGap();
 }
 
