@@ -6,40 +6,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Free AI Search Audit — Is AI Finding Your Brand?</title>
 <meta name="description" content="Find out if AI search engines are recommending your premium food & beverage brand — or if you're invisible. Free instant audit.">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --gold: #c8a97e;
-    --gold-dim: rgba(200,169,126,0.15);
-    --gold-glow: rgba(200,169,126,0.3);
-    --bg: #0a0a0a;
-    --surface: rgba(255,255,255,0.03);
-    --border: rgba(255,255,255,0.06);
-    --text: #e8e4de;
-    --text-dim: #8a8580;
-    --text-muted: #555;
-    --green: #4ade80;
-    --red: #ef4444;
+    --gold: #C17A5A;
+    --gold-dim: rgba(193,122,90,0.15);
+    --gold-glow: rgba(193,122,90,0.3);
+    --bg: #FAF7F2;
+    --surface: rgba(255,255,255,0.8);
+    --border: rgba(44,36,22,0.1);
+    --text: #2C2416;
+    --text-dim: #5C4F3A;
+    --text-muted: #8C7F6A;
+    --green: #7A8C5A;
+    --red: #C17A5A;
     --font-body: 'DM Sans', sans-serif;
-    --font-display: 'Playfair Display', serif;
+    --font-display: 'Cormorant Garamond', serif;
   }
 
   body {
     min-height: 100vh;
-    background: linear-gradient(165deg, #1a1a1a 0%, #242424 50%, #2a2520 100%);
+    background: #FAF7F2;
     font-family: var(--font-body);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
-  }
-
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    opacity: 0.03;
-    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
-    pointer-events: none; z-index: 0;
   }
 
   .container { max-width: 860px; margin: 0 auto; padding: 48px 24px; position: relative; z-index: 1; }
@@ -55,21 +47,21 @@
     font-family: var(--font-display);
     font-size: clamp(28px, 5vw, 44px);
     font-weight: 600; line-height: 1.15;
-    color: #fff; margin: 20px 0 14px;
+    color: var(--text); margin: 20px 0 14px;
   }
   h1 span { color: var(--gold); }
 
-  .subtitle { font-size: 16px; color: #ccc; max-width: 540px; margin: 0 auto; line-height: 1.6; }
+  .subtitle { font-size: 16px; color: var(--text-dim); max-width: 540px; margin: 0 auto; line-height: 1.6; }
 
   .section-label {
     display: block; font-size: 12px; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
-    color: #e8e4de; margin-bottom: 8px;
+    color: var(--text-dim); margin-bottom: 8px;
   }
 
   .card {
     background: var(--surface);
-    border: 1px solid rgba(200,169,126,0.12);
+    border: 1px solid rgba(193,122,90,0.12);
     border-radius: 16px; padding: 36px 32px; margin-bottom: 32px;
   }
 
@@ -77,34 +69,34 @@
 
   input[type="text"], input[type="email"] {
     width: 100%; padding: 14px 18px;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid rgba(200,169,126,0.2); border-radius: 10px;
-    color: #fff; font-size: 16px;
+    background: #fff;
+    border: 1px solid rgba(193,122,90,0.25); border-radius: 10px;
+    color: var(--text); font-size: 16px;
     font-family: var(--font-body);
     transition: all 0.2s ease;
   }
-  input::placeholder { color: #999; }
+  input::placeholder { color: var(--text-muted); }
   input:focus {
     outline: none; border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(200,169,126,0.15);
+    box-shadow: 0 0 0 3px rgba(193,122,90,0.15);
   }
 
   .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
 
   .chip {
     padding: 7px 14px; border-radius: 20px; font-size: 13px;
-    color: #e8e4de; cursor: pointer; transition: all 0.2s ease;
-    border: 1px solid rgba(200,169,126,0.3);
-    background: rgba(200,169,126,0.08); white-space: nowrap;
+    color: var(--text-dim); cursor: pointer; transition: all 0.2s ease;
+    border: 1px solid rgba(193,122,90,0.25);
+    background: rgba(193,122,90,0.06); white-space: nowrap;
   }
-  .chip:hover { border-color: var(--gold); background: rgba(200,169,126,0.15); }
-  .chip.active { border-color: var(--gold); background: rgba(200,169,126,0.25); color: #fff; font-weight: 600; }
+  .chip:hover { border-color: var(--gold); background: rgba(193,122,90,0.12); }
+  .chip.active { border-color: var(--gold); background: rgba(193,122,90,0.15); color: var(--text); font-weight: 600; }
 
   .btn-primary {
     width: 100%; padding: 16px;
-    background: linear-gradient(135deg, #c8a97e, #a3845a);
+    background: linear-gradient(135deg, #C17A5A, #A3845A);
     border: none; border-radius: 10px;
-    color: #0a0a0a; font-size: 15px; font-weight: 600;
+    color: #FAF7F2; font-size: 15px; font-weight: 600;
     font-family: var(--font-body); cursor: pointer;
     transition: all 0.3s ease; letter-spacing: 0.02em;
   }
@@ -112,8 +104,8 @@
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; background: var(--gold-dim); color: var(--gold); }
 
   .btn-secondary {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(44,36,22,0.04);
+    border: 1px solid rgba(44,36,22,0.12);
     border-radius: 8px; padding: 8px 16px;
     color: var(--text-dim); font-size: 13px;
     cursor: pointer; font-family: var(--font-body);
@@ -125,17 +117,17 @@
     border-radius: 10px; border: 1px solid transparent;
     transition: all 0.3s ease;
   }
-  .step.active { background: rgba(200,169,126,0.08); border-color: rgba(200,169,126,0.2); animation: borderGlow 2s ease infinite; }
-  .step.error-step { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.15); }
+  .step.active { background: rgba(193,122,90,0.08); border-color: rgba(193,122,90,0.2); animation: borderGlow 2s ease infinite; }
+  .step.error-step { background: rgba(139,127,168,0.06); border-color: rgba(139,127,168,0.15); }
   .step-num {
     width: 28px; height: 28px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 13px; font-weight: 600; flex-shrink: 0;
   }
-  .step-num.done { background: rgba(74,222,128,0.15); color: var(--green); }
+  .step-num.done { background: rgba(122,140,90,0.15); color: var(--green); }
   .step-num.active { background: var(--gold-dim); color: var(--gold); }
-  .step-num.pending { background: rgba(255,255,255,0.05); color: var(--text-muted); }
-  .step-num.errored { background: rgba(239,68,68,0.15); color: var(--red); }
+  .step-num.pending { background: rgba(44,36,22,0.06); color: var(--text-muted); }
+  .step-num.errored { background: rgba(139,127,168,0.15); color: #8B7FA8; }
   .dots { margin-left: auto; display: flex; gap: 3px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 1.4s ease-in-out infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
@@ -143,76 +135,76 @@
 
   .email-gate {
     text-align: center; padding: 48px 32px;
-    background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
-    border: 1px solid rgba(200,169,126,0.2);
+    background: linear-gradient(135deg, rgba(193,122,90,0.08), rgba(193,122,90,0.02));
+    border: 1px solid rgba(193,122,90,0.2);
     border-radius: 16px; margin-bottom: 32px;
     animation: fadeUp 0.5s ease;
   }
-  .email-gate h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 12px; }
+  .email-gate h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
   .email-gate p { font-size: 14px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.5; }
   .email-gate input { max-width: 360px; margin: 0 auto 12px; display: block; }
   .email-gate .btn-primary { max-width: 360px; margin: 0 auto; }
 
   .report-header {
-    background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
-    border: 1px solid rgba(200,169,126,0.2);
+    background: linear-gradient(135deg, rgba(193,122,90,0.08), rgba(193,122,90,0.02));
+    border: 1px solid rgba(193,122,90,0.2);
     border-radius: 16px; padding: 36px 32px;
     margin-bottom: 24px; text-align: center;
     animation: fadeUp 0.6s ease;
   }
   .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 24px; }
   .score-card {
-    background: var(--surface); border: 1px solid var(--border);
+    background: #fff; border: 1px solid var(--border);
     border-radius: 12px; padding: 20px;
     animation: fadeUp 0.5s ease forwards; opacity: 0;
   }
-  .rec-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin-bottom: 24px; }
+  .rec-panel { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin-bottom: 24px; }
   .rec-card { padding: 16px 18px; margin-bottom: 10px; border-radius: 10px; animation: fadeUp 0.5s ease forwards; opacity: 0; }
-  .rec-card.critical { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
-  .rec-card.high { background: rgba(200,169,126,0.06); border: 1px solid rgba(200,169,126,0.15); }
-  .rec-card.medium { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
-  .rec-card.optimize { background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); }
+  .rec-card.critical { background: rgba(139,127,168,0.06); border: 1px solid rgba(139,127,168,0.15); }
+  .rec-card.high { background: rgba(193,122,90,0.06); border: 1px solid rgba(193,122,90,0.15); }
+  .rec-card.medium { background: rgba(44,36,22,0.02); border: 1px solid var(--border); }
+  .rec-card.optimize { background: rgba(122,140,90,0.06); border: 1px solid rgba(122,140,90,0.2); }
   .rec-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-  .rec-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
+  .rec-badge.critical { background: rgba(139,127,168,0.15); color: #8B7FA8; }
   .rec-badge.high { background: var(--gold-dim); color: var(--gold); }
-  .rec-badge.medium { background: rgba(255,255,255,0.08); color: var(--text-dim); }
-  .rec-badge.optimize { background: rgba(74,222,128,0.12); color: var(--green); }
+  .rec-badge.medium { background: rgba(44,36,22,0.06); color: var(--text-dim); }
+  .rec-badge.optimize { background: rgba(122,140,90,0.15); color: var(--green); }
 
   .cta-card {
     text-align: center; padding: 32px 24px;
-    background: linear-gradient(135deg, rgba(200,169,126,0.06), rgba(200,169,126,0.02));
-    border: 1px solid rgba(200,169,126,0.15);
+    background: linear-gradient(135deg, rgba(193,122,90,0.06), rgba(193,122,90,0.02));
+    border: 1px solid rgba(193,122,90,0.15);
     border-radius: 12px;
     animation: fadeUp 0.6s ease 0.5s forwards; opacity: 0;
   }
   .cta-btn {
     display: inline-block; padding: 12px 32px;
-    background: linear-gradient(135deg, #c8a97e, #a3845a);
-    border-radius: 8px; color: #0a0a0a;
+    background: linear-gradient(135deg, #C17A5A, #A3845A);
+    border-radius: 8px; color: #FAF7F2;
     font-size: 14px; font-weight: 600;
     text-decoration: none; letter-spacing: 0.02em;
   }
 
-  .footer { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.04); font-size: 12px; color: #444; }
-  .error { color: var(--red); font-size: 13px; margin-top: 12px; }
+  .footer { text-align: center; margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(44,36,22,0.08); font-size: 12px; color: var(--text-muted); }
+  .error { color: #8B7FA8; font-size: 13px; margin-top: 12px; }
   .hidden { display: none; }
 
   .social-proof { display: flex; gap: 24px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
-  .proof-item { font-size: 15px; color: #ccc; display: flex; align-items: center; gap: 6px; }
+  .proof-item { font-size: 15px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
   .proof-item span { color: var(--gold); font-weight: 600; }
 
   .error-banner {
-    background: rgba(239,68,68,0.08);
-    border: 1px solid rgba(239,68,68,0.2);
+    background: rgba(139,127,168,0.08);
+    border: 1px solid rgba(139,127,168,0.2);
     border-radius: 12px; padding: 20px 24px;
     margin-bottom: 24px; animation: fadeUp 0.4s ease;
   }
   .error-banner p { font-size: 14px; color: var(--text-dim); line-height: 1.5; margin: 0; }
-  .error-banner strong { color: var(--red); }
+  .error-banner strong { color: #8B7FA8; }
 
   @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes borderGlow { 0%, 100% { border-color: rgba(200,169,126,0.15); } 50% { border-color: rgba(200,169,126,0.4); } }
+  @keyframes borderGlow { 0%, 100% { border-color: rgba(193,122,90,0.15); } 50% { border-color: rgba(193,122,90,0.4); } }
 </style>
 </head>
 <body>
@@ -227,7 +219,7 @@
       <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
       <div class="proof-item">⚡ Results in <span>~2 minutes</span></div>
     </div>
-    <p style="font-size:12px;color:#bbb;margin-top:14px">Built for premium F&amp;B, restaurant, hospitality, and CPG brands</p>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:14px">Built for premium F&amp;B, restaurant, hospitality, and CPG brands</p>
   </div>
 
   <div class="card" id="inputSection">
@@ -239,20 +231,20 @@
       <label class="section-label">Category</label>
       <div class="chip-grid" id="chipGrid"></div>
       <input type="text" id="customCategory" placeholder="Or type your category...">
-      <p style="font-size:11px;color:#888;margin-top:8px;">Be specific — "non-alcoholic functional beverage" outperforms "beverage brand." The more precise your category, the more accurate your audit.</p>
+      <p style="font-size:11px;color:var(--text-muted);margin-top:8px;">Be specific — "non-alcoholic functional beverage" outperforms "beverage brand." The more precise your category, the more accurate your audit.</p>
     </div>
     <div class="field">
       <label class="section-label">Your Name</label>
       <input type="text" id="userName" placeholder="First name">
     </div>
     <div class="field">
-      <label class="section-label">Website URL <span style="font-weight:400;color:#666;text-transform:none;letter-spacing:0">(optional — improves accuracy)</span></label>
+      <label class="section-label">Website URL <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0">(optional — improves accuracy)</span></label>
       <input type="text" id="brandUrl" placeholder="e.g. yourbrand.com">
     </div>
     <div id="errorMsg" class="error hidden"></div>
     <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
-    <p style="font-size:12px; color:#e8e4de; font-weight:600; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
-    <p style="font-size:11px; color:#bbb; text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
+    <p style="font-size:12px; color:var(--text-dim); font-weight:600; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
+    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
   </div>
 
   <div id="progress" class="hidden"></div>
@@ -448,7 +440,7 @@ function calcScore(id, data) {
   return Math.min(100, s);
 }
 
-function scoreColor(s) { return s >= 70 ? '#4ade80' : s >= 40 ? '#c8a97e' : '#ef4444'; }
+function scoreColor(s) { return s >= 70 ? '#7A8C5A' : s >= 40 ? '#C17A5A' : '#8B7FA8'; }
 function scoreLabel(s) {
   if (s >= 76) return 'Strong AI Visibility';
   if (s >= 56) return 'Moderate AI Visibility';
@@ -459,9 +451,9 @@ function scoreLabel(s) {
 function svgRing(score, size, sw, color) {
   const r = (size - sw) / 2, c = 2 * Math.PI * r, off = c - (score / 100) * c;
   return `<svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="${sw}"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(44,36,22,0.08)" stroke-width="${sw}"/>
     <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round" style="transition:stroke-dashoffset 1.2s ease-out"/>
-    <text x="${size/2}" y="${size/2}" text-anchor="middle" dominant-baseline="central" fill="white" font-size="${size*0.28}" font-weight="700" font-family="'DM Sans',sans-serif" style="transform:rotate(90deg);transform-origin:center">${score}</text>
+    <text x="${size/2}" y="${size/2}" text-anchor="middle" dominant-baseline="central" fill="${color}" font-size="${size*0.28}" font-weight="700" font-family="'DM Sans',sans-serif" style="transform:rotate(90deg);transform-origin:center">${score}</text>
   </svg>`;
 }
 
@@ -500,8 +492,8 @@ async function runAudit() {
       return `<div class="step ${stepClass}">
         <div class="step-num ${numClass}">${icon}</div>
         <div>
-          <div style="font-size:14px;font-weight:500;color:${hasError?'var(--red)':done?'var(--text-dim)':active?'var(--text)':'var(--text-muted)'}">${q.label}</div>
-          <div style="font-size:12px;color:${hasError?'rgba(239,68,68,0.6)':active?'var(--text-dim)':'#444'}">${hasError ? 'Analysis failed — will retry' : q.desc}</div>
+          <div style="font-size:14px;font-weight:500;color:${hasError?'#8B7FA8':done?'var(--text-dim)':active?'var(--text)':'var(--text-muted)'}">${q.label}</div>
+          <div style="font-size:12px;color:${hasError?'rgba(139,127,168,0.6)':active?'var(--text-dim)':'var(--text-muted)'}">${hasError ? 'Analysis failed — will retry' : q.desc}</div>
         </div>
         ${active?'<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>':''}
       </div>`;
@@ -550,7 +542,7 @@ function showFatalError() {
   const gate = document.getElementById('emailGate');
   gate.classList.remove('hidden');
   gate.innerHTML = `<div class="error-banner" style="text-align:center; padding:40px 32px;">
-    <h2 style="font-family:var(--font-display);font-size:22px;font-weight:600;color:#fff;margin-bottom:12px">Audit couldn't complete</h2>
+    <h2 style="font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--text);margin-bottom:12px">Audit couldn't complete</h2>
     <p style="margin-bottom:20px">We hit a technical issue running the analysis. This usually resolves itself quickly.</p>
     <button class="btn-primary" onclick="resetAudit()" style="max-width:300px;margin:0 auto">Try Again</button>
   </div>`;
@@ -568,7 +560,7 @@ function showEmailGate() {
     <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to close your gaps.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
-    <p style="font-size:12px;color:#e8e4de;font-weight:600;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
+    <p style="font-size:12px;color:var(--text-dim);font-weight:600;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
   </div>`;
 }
 
@@ -634,7 +626,7 @@ function renderReport() {
 
   h += `<div class="report-header">
     <div class="section-label" style="margin-bottom:4px">AI Visibility Report</div>
-    <h2 style="font-family:var(--font-display);font-size:28px;font-weight:600;color:#fff;margin:0 0 24px">${auditBrand}</h2>
+    <h2 style="font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--text);margin:0 0 24px">${auditBrand}</h2>
     <div style="display:flex;justify-content:center;align-items:center;gap:32px;margin-bottom:16px">
       ${svgRing(overall, 120, 10, scoreColor(overall))}
       <div style="text-align:left">
@@ -642,7 +634,7 @@ function renderReport() {
         <div style="font-size:14px;color:var(--text-dim);margin-top:4px">${scoreLabel(overall)}</div>
       </div>
     </div>
-    <div style="font-size:13px;color:#666;margin-top:12px">${auditCat} · Audited ${today}</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-top:12px">${auditCat} · Audited ${today}</div>
   </div>`;
 
   // Show warning if some queries failed
@@ -660,17 +652,17 @@ function renderReport() {
     const sum = d && !d.error ? (d.summary || d.category_leaders || 'Analysis complete.') : '';
     h += `<div class="score-card" style="animation-delay:${i*0.1}s">
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-        <div><div style="font-size:14px;font-weight:600;color:${hasError ? 'var(--red)' : 'var(--text)'};margin-bottom:2px">${q.label}</div>
-        <div style="font-size:11px;color:#666">${q.desc}</div></div>
-        ${hasError ? '<div style="font-size:11px;color:var(--red);padding:4px 10px;border-radius:8px;background:rgba(239,68,68,0.1)">N/A</div>' : svgRing(sc, 48, 4, scoreColor(sc))}
+        <div><div style="font-size:14px;font-weight:600;color:${hasError ? '#8B7FA8' : 'var(--text)'};margin-bottom:2px">${q.label}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${q.desc}</div></div>
+        ${hasError ? '<div style="font-size:11px;color:#8B7FA8;padding:4px 10px;border-radius:8px;background:rgba(139,127,168,0.1)">N/A</div>' : svgRing(sc, 48, 4, scoreColor(sc))}
       </div>
       ${sum ? `<div style="font-size:13px;color:var(--text-dim);line-height:1.5">${sum}</div>` : ''}
-      ${hasError ? '<div style="font-size:12px;color:rgba(239,68,68,0.6)">This dimension could not be analyzed. Run again for complete results.</div>' : ''}
+      ${hasError ? '<div style="font-size:12px;color:rgba(139,127,168,0.6)">This dimension could not be analyzed. Run again for complete results.</div>' : ''}
     </div>`;
   });
   h += '</div>';
 
-  h += '<div class="rec-panel"><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 20px;color:#fff">Recommendations</h3>';
+  h += '<div class="rec-panel"><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 20px;color:var(--text)">Recommendations</h3>';
   recs.forEach((r, i) => {
     const cls = r.p.toLowerCase();
     h += `<div class="rec-card ${cls}" style="animation-delay:${i*0.12}s">
@@ -684,7 +676,7 @@ function renderReport() {
   h += '</div>';
 
   h += `<div class="rec-panel" style="margin-bottom:24px;">
-  <h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 8px;color:#fff">What Is This Gap Costing You?</h3>
+  <h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 8px;color:var(--text)">What Is This Gap Costing You?</h3>
   <p style="font-size:13px;color:var(--text-dim);line-height:1.6;margin:0 0 24px">Your inclusion rate is the starting point. Select your business type below to calculate the annual revenue influenced by your brand selection gap.</p>
 
   <p style="font-size:13px;font-weight:600;color:var(--gold);margin-bottom:16px;">Select your business type to get started</p>
@@ -704,44 +696,44 @@ function renderReport() {
       <span class="chip active" onclick="selectValueType('single')" id="value-single">Single order value</span>
       <span class="chip" onclick="selectValueType('subscription')" id="value-subscription">Annual subscriber value (LTV)</span>
     </div>
-    <p style="font-size:11px;color:#666;margin-top:6px;">Use single order value for one-time purchase brands. Use annual subscriber value if you have a subscription program — e.g. a subscriber worth $300/year.</p>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:6px;">Use single order value for one-time purchase brands. Use annual subscriber value if you have a subscription program — e.g. a subscriber worth $300/year.</p>
   </div>
 
   <div style="margin-bottom:20px;">
     <label class="section-label" id="aovLabel">Average Order Value ($)</label>
-    <input type="number" id="calcAOV" placeholder="e.g. 150" style="max-width:240px;padding:12px 16px;background:rgba(0,0,0,0.4);border:1px solid rgba(200,169,126,0.2);border-radius:10px;color:#fff;font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
+    <input type="number" id="calcAOV" placeholder="e.g. 150" style="max-width:240px;padding:12px 16px;background:#fff;border:1px solid rgba(193,122,90,0.25);border-radius:10px;color:var(--text);font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
   </div>
 
   <div style="margin-bottom:20px;">
     <label class="section-label">Your AI Inclusion Rate (%)</label>
-    <input type="number" id="calcInclusion" value="${overall}" style="max-width:240px;padding:12px 16px;background:rgba(0,0,0,0.4);border:1px solid rgba(200,169,126,0.2);border-radius:10px;color:#fff;font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
-    <p style="font-size:11px;color:#666;margin-top:6px">Pre-filled from your audit result. You can adjust it.</p>
+    <input type="number" id="calcInclusion" value="${overall}" style="max-width:240px;padding:12px 16px;background:#fff;border:1px solid rgba(193,122,90,0.25);border-radius:10px;color:var(--text);font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
+    <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Pre-filled from your audit result. You can adjust it.</p>
   </div>
 
-  <div id="calcResult" style="display:none;padding:24px;background:linear-gradient(135deg,rgba(200,169,126,0.08),rgba(200,169,126,0.02));border:1px solid rgba(200,169,126,0.2);border-radius:12px;text-align:center;margin-top:8px;">
+  <div id="calcResult" style="display:none;padding:24px;background:linear-gradient(135deg,rgba(193,122,90,0.08),rgba(193,122,90,0.02));border:1px solid rgba(193,122,90,0.2);border-radius:12px;text-align:center;margin-top:8px;">
     <div style="font-size:13px;color:var(--text-dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">Estimated Annual Revenue Influenced by Your Brand Selection Gap</div>
-    <div id="calcOutput" style="font-size:48px;font-weight:700;font-family:var(--font-display);color:#c8a97e;line-height:1;margin-bottom:8px;"></div>
-    <div style="font-size:12px;color:#666;margin-bottom:16px">Conservative estimate based on 8% conversion rate. Top performers in your category maintain 70%+ AI visibility. Actual exposure may be higher — AI-referred buyers convert at 11–14% (Salesforce, 2025).</div>
-    <div id="calcStat" style="font-size:13px;color:var(--text-dim);padding:12px 16px;background:rgba(255,255,255,0.03);border-radius:8px;"></div>
+    <div id="calcOutput" style="font-size:48px;font-weight:700;font-family:var(--font-display);color:#C17A5A;line-height:1;margin-bottom:8px;"></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px">Conservative estimate based on 8% conversion rate. Top performers in your category maintain 70%+ AI visibility. Actual exposure may be higher — AI-referred buyers convert at 11–14% (Salesforce, 2025).</div>
+    <div id="calcStat" style="font-size:13px;color:var(--text-dim);padding:12px 16px;background:rgba(44,36,22,0.03);border-radius:8px;"></div>
   </div>
 
-  <div id="calcAboveBenchmark" style="display:none;padding:20px;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.15);border-radius:12px;text-align:center;margin-top:8px;">
-    <div style="font-size:14px;color:#4ade80;font-weight:600;margin-bottom:6px">You're above the category average — but top performers score 70+. Here's what the remaining gap costs.</div>
+  <div id="calcAboveBenchmark" style="display:none;padding:20px;background:rgba(122,140,90,0.06);border:1px solid rgba(122,140,90,0.2);border-radius:12px;text-align:center;margin-top:8px;">
+    <div style="font-size:14px;color:#7A8C5A;font-weight:600;margin-bottom:6px">You're above the category average — but top performers score 70+. Here's what the remaining gap costs.</div>
     <div style="font-size:13px;color:var(--text-dim)">Book a call to discuss how to close the gap and reach the top tier.</div>
   </div>
 </div>`;
 
   h += `<div class="cta-card">
-    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to improve these scores?</div>
+    <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text);margin-bottom:8px">Want to improve these scores?</div>
     <p style="font-size:14px;color:var(--text-dim);margin:0 0 24px;line-height:1.5">I help premium brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <a href="https://calendly.com/ally-allykielconsulting/discovery" target="_blank" class="cta-btn">Book a Discovery Call →</a>
       <a href="https://calculator.allykielconsulting.com" target="_blank" style="display:inline-block;padding:14px 28px;border:1px solid var(--gold-dim);border-radius:8px;color:var(--gold);text-decoration:none;font-size:14px;font-weight:600;text-align:center">Calculate Your Gap →</a>
     </div>
-    <p style="font-size:11px;color:#bbb;margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:16px">Scores indicate AI visibility signals, not guaranteed rankings.</p>
   </div>`;
 
-  h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:#bbb">
+  h += `<div class="footer" style="text-align:center;padding:24px 0;font-size:12px;color:var(--text-muted)">
     <span style="color:var(--gold);font-weight:600">Ally Kiel Consulting</span> · AI Discoverability Strategy for Premium Brands<br>
     <a href="https://allykielconsulting.com" target="_blank" style="color:var(--gold);text-decoration:none;margin-top:4px;display:inline-block">allykielconsulting.com</a>
   </div>`;
