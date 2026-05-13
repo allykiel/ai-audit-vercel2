@@ -243,8 +243,7 @@
     </div>
     <div id="errorMsg" class="error hidden"></div>
     <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
-    <p style="font-size:12px; color:var(--text-dim); font-weight:600; text-align:center; margin-top:12px;">We don't sell your info. One follow-up email with your report.</p>
-    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:6px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
+    <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:12px;">Scores indicate AI visibility signals, not guaranteed rankings · Powered by live AI search analysis</p>
   </div>
 
   <div id="progress" class="hidden"></div>
@@ -560,7 +559,6 @@ function showEmailGate() {
     <p>Your full AI Visibility Report for <strong>${auditBrand}</strong> is ready — including detailed scores across all 4 dimensions and specific recommendations to close your gaps.</p>
     <input type="email" id="gateEmail" placeholder="Enter your email to see your full report">
     <button class="btn-primary" onclick="unlockReport()" style="max-width:360px;margin:0 auto">See My Full Report</button>
-    <p style="font-size:12px;color:var(--text-dim);font-weight:600;margin-top:12px">We don't sell your info. One follow-up email with your report.</p>
   </div>`;
 }
 
@@ -705,9 +703,9 @@ function renderReport() {
   </div>
 
   <div style="margin-bottom:20px;">
-    <label class="section-label">Your AI Inclusion Rate (%)</label>
+    <label class="section-label">Your AI Visibility Score</label>
     <input type="number" id="calcInclusion" value="${overall}" style="max-width:240px;padding:12px 16px;background:#fff;border:1px solid rgba(193,122,90,0.25);border-radius:10px;color:var(--text);font-size:16px;font-family:var(--font-body);width:100%;" oninput="calcGap()">
-    <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Pre-filled from your audit result. You can adjust it.</p>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Pre-filled from your audit result. This reflects your performance across 4 AI visibility dimensions. For a precise inclusion rate, see the full diagnostic.</p>
   </div>
 
   <div id="calcResult" style="display:none;padding:24px;background:linear-gradient(135deg,rgba(193,122,90,0.08),rgba(193,122,90,0.02));border:1px solid rgba(193,122,90,0.2);border-radius:12px;text-align:center;margin-top:8px;">
